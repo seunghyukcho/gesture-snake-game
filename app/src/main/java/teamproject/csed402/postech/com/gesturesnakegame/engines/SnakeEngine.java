@@ -98,6 +98,7 @@ public class SnakeEngine extends SurfaceView implements Runnable {
         isPlaying = true;
         thread = new Thread(this);
         thread.start();
+
     }
 
     public void newGame() {
