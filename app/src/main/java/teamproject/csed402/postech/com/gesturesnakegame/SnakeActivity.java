@@ -1,5 +1,6 @@
 package teamproject.csed402.postech.com.gesturesnakegame;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import teamproject.csed402.postech.com.gesturesnakegame.engines.TouchSnake;
 public class SnakeActivity extends AppCompatActivity {
     // Declare an instance of SnakeEngine
     TouchSnake snakeEngine;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,19 +1,25 @@
 package teamproject.csed402.postech.com.gesturesnakegame.engines;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.media.SoundPool;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+
 import java.util.Random;
 
+import javax.xml.transform.Result;
+
+import teamproject.csed402.postech.com.gesturesnakegame.R;
+import teamproject.csed402.postech.com.gesturesnakegame.ResultActivity;
 public class SnakeEngine extends SurfaceView implements Runnable {
     public enum Heading {UP, DOWN, LEFT, RIGHT};
     public enum Rotate {LEFT, RIGHT};
@@ -42,12 +48,15 @@ public class SnakeEngine extends SurfaceView implements Runnable {
     protected Canvas canvas;
     protected SurfaceHolder surfaceHolder;
     protected Paint paint;
+    protected Paint fontcolor;
+    protected Context mContext;
+    public ResultActivity resa;
+
 
 
     public SnakeEngine(Context context, Point size) {
         super(context);
-
-        context = context;
+        this.mContext = context;
 
         screenX = size.x;
         screenY = size.y;
@@ -168,13 +177,18 @@ public class SnakeEngine extends SurfaceView implements Runnable {
     public void draw() {
         if (surfaceHolder.getSurface().isValid()) {
             canvas = surfaceHolder.lockCanvas();
-
-            canvas.drawColor(Color.argb(255, 26, 128, 182));
-            paint.setColor(Color.argb(255, 255, 255, 255));
-
-            paint.setTextSize(90);
-            canvas.drawText("Score:" + score, 10, 70, paint);
-
+            SharedPreferences pref = getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
+            int snakecolor=pref.getInt("scolor",0);
+            int alpha=(0xFF000000 & snakecolor)>>24;
+            int red=(0x00FF0000 & snakecolor)>>16;
+            int green=(0x0000FF00 &snakecolor)>>8;
+            int blue=(0x000000FF&snakecolor);
+            canvas.drawColor(Color.argb(255, 0, 0, 0));//background color
+            paint.setColor(Color.argb(alpha,red,green,blue));//snake color
+            fontcolor=new Paint();
+            fontcolor.setTextSize(90);
+            fontcolor.setColor(Color.argb(255,255,255,255));//font color which is white
+            canvas.drawText("Score:" + score, 10, 70, fontcolor);
             for (int i = 0; i < snakeLength; i++) {
                 canvas.drawRect(snakeXs[i] * blockSize,
                         (snakeYs[i] * blockSize),
@@ -183,7 +197,7 @@ public class SnakeEngine extends SurfaceView implements Runnable {
                         paint);
             }
 
-            paint.setColor(Color.argb(255, 255, 0, 0));
+            paint.setColor(Color.argb(255, 255, 0, 0));//eating color
 
             canvas.drawRect(bobX * blockSize,
                     (bobY * blockSize),

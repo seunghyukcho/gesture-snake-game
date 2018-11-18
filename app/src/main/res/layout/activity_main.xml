@@ -1,18 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bround_im1"
+    android:orientation="vertical"
+    android:visibility="visible"
     tools:context=".MainActivity">
 
+
     <TextView
+        android:id="@+id/GameName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="114dp"
+        android:layout_marginTop="15dp"
+        android:fontFamily="casual"
+        android:text="SnakeW"
+        android:textAlignment="center"
+        android:textColor="@android:color/holo_green_dark"
+        android:textSize="49sp" />
 
-</android.support.constraint.ConstraintLayout>
+    <ImageButton
+        android:id="@+id/touch_mode"
+        android:layout_width="111dp"
+        android:layout_height="118dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="47dp"
+        android:layout_marginBottom="243dp"
+        android:background="@android:color/transparent"
+        android:padding="0sp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/touch_1262757" />
+
+    <ImageButton
+        android:id="@+id/gesture_mode"
+        android:layout_width="160dp"
+        android:layout_height="149dp"
+        android:layout_alignTop="@+id/touch_mode"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="-14dp"
+        android:layout_marginEnd="12dp"
+        android:background="@android:color/transparent"
+        android:padding="0sp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/horizontal_spread" />
+
+    <TextView
+        android:id="@+id/touch_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="64dp"
+        android:layout_marginBottom="212dp"
+        android:text="Touch Mode"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/gesture_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/touch_text"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="-2dp"
+        android:layout_marginEnd="44dp"
+        android:text="Gesture Mode"
+        android:textColor="@android:color/black" />
+
+    <ImageButton
+        android:id="@+id/setit"
+        android:layout_width="69dp"
+        android:layout_height="67dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="7dp"
+        android:layout_marginBottom="15dp"
+        android:layout_toEndOf="@+id/GameName"
+        android:padding="0sp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/setit" />
+
+
+</RelativeLayout>
