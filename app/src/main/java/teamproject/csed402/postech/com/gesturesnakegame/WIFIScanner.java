@@ -4,24 +4,19 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Point;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Display;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.util.List;
 import java.util.Scanner;
+import java.util.List;
 
-import teamproject.csed402.postech.com.gesturesnakegame.engines.GestureSnake;
+public class WIFIScanner extends AppCompatActivity {
 
-public class SnakeActivity extends AppCompatActivity {
-    // Declare an instance of SnakeEngine
-    GestureSnake snakeEngine;
     private static final String TAG = "WIFIScanner";
 
     WifiManager wifimanager;
@@ -29,65 +24,6 @@ public class SnakeActivity extends AppCompatActivity {
     String result = "";
 
     private List<ScanResult> mScanResult;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Setup WIFI
-        wifimanager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        Log.d(TAG, "Setup WifiManager getSystemService");
-
-        // turn-on wifi WIFIEnabled
-        if(!wifimanager.isWifiEnabled())
-            wifimanager.setWifiEnabled(true);
-
-        initWIFIScan();
-
-        // Get the pixel dimensions of the screen
-        Display display = getWindowManager().getDefaultDisplay();
-
-        // Initialize the result into a Point object
-        Point size = new Point();
-        display.getSize(size);
-
-        // Create a new instance of the SnakeEngine class
-
-        //snakeEngine = new TouchSnake(this, size);
-        snakeEngine = new GestureSnake(this, size, getIntent());
-
-        // Make snakeEngine the view of the Activity
-        setContentView(snakeEngine);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            if(checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != getPackageManager().PERMISSION_GRANTED)
-            {
-                Log.d("bad", "1");
-                requestPermissions(new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 87);
-            }
-            if(checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != getPackageManager().PERMISSION_GRANTED)
-            {
-                Log.d("bad", "2");
-                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 123);
-            }
-        }
-
-        snakeEngine.resume();
-
-    }
-
-    // Stop the thread in snakeEngine
-    @Override
-    protected void onPause() {
-        super.onPause();
-        snakeEngine.pause();
-    }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver(){
         @Override
@@ -102,6 +38,23 @@ public class SnakeActivity extends AppCompatActivity {
         }
 
     };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+
+        Log.d("Wifiscanner", "onCreate");
+
+        // Setup WIFI
+        wifimanager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        Log.d(TAG, "Setup WifiManager getSystemService");
+
+        // turn-on wifi WIFIEnabled
+        if(!wifimanager.isWifiEnabled())
+            wifimanager.setWifiEnabled(true);
+
+        initWIFIScan();
+    }
 
     public void getWIFIScanResult(){
         mScanResult = wifimanager.getScanResults();
@@ -141,5 +94,29 @@ public class SnakeActivity extends AppCompatActivity {
         registerReceiver(mReceiver, filter);
         wifimanager.startScan();
         Log.d(TAG, "initWIFIScan()");
+    }
+
+    public void printToast(String messageToast){
+        Toast.makeText(this, messageToast, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if(checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != getPackageManager().PERMISSION_GRANTED)
+            {
+                Log.d("bad", "1");
+                requestPermissions(new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 87);
+            }
+            if(checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != getPackageManager().PERMISSION_GRANTED)
+            {
+                Log.d("bad", "2");
+                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 123);
+            }
+        }
     }
 }
