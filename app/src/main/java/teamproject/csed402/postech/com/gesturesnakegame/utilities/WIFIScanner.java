@@ -1,4 +1,4 @@
-package teamproject.csed402.postech.com.gesturesnakegame;
+package teamproject.csed402.postech.com.gesturesnakegame.utilities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import java.util.Scanner;
 import java.util.List;
+
+import teamproject.csed402.postech.com.gesturesnakegame.MyApplication;
 
 public class WIFIScanner extends AppCompatActivity {
 

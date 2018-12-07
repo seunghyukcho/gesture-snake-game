@@ -7,6 +7,7 @@ import android.view.Display;
 
 import teamproject.csed402.postech.com.gesturesnakegame.engines.SnakeEngine;
 import teamproject.csed402.postech.com.gesturesnakegame.engines.TouchSnake;
+import teamproject.csed402.postech.com.gesturesnakegame.utilities.BTScanner;
 
 public class SnakeActivity extends AppCompatActivity {
     // Declare an instance of SnakeEngine
