@@ -55,8 +55,6 @@ public class SnakeEngine extends SurfaceView implements Runnable {
     protected Context mContext;
     public ResultActivity resa;
 
-
-
     public SnakeEngine(Context context, Point size) {
         super(context);
         this.mContext = context;
@@ -99,7 +97,6 @@ public class SnakeEngine extends SurfaceView implements Runnable {
         isPlaying = true;
         thread = new Thread(this);
         thread.start();
-
     }
 
     public void newGame() {

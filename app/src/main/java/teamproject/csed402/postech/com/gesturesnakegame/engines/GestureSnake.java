@@ -2,39 +2,45 @@ package teamproject.csed402.postech.com.gesturesnakegame.engines;
 
 import android.content.Context;
 import android.graphics.Point;
-import android.content.Intent;
-import android.util.Log;
+import android.os.SystemClock;
 
-import teamproject.csed402.postech.com.gesturesnakegame.MyApplication;
+import teamproject.csed402.postech.com.gesturesnakegame.utilities.BTScanner;
 
-public class GestureSnake extends SnakeEngine{
-    private Intent parentIntent;
-    private Context parentContext;
-    public GestureSnake(Context context, Point size, Intent intent) {
+public class GestureSnake extends SnakeEngine {
+    private BTScanner btScanner;
+
+    public GestureSnake(Context context, Point size) {
         super(context, size);
-        parentContext = context;
-        parentIntent = intent;
+        btScanner = new BTScanner(context);
+
+        btScanner.request();
     }
+
     @Override
     public void update() {
-        if (eatinfo()==1) {
+        if (eatinfo() == 1) {
             snakeLength++;
             spawnBob();
             score++;
         }
-        String direction = ((MyApplication) parentContext.getApplicationContext()).getSomeVariable();
 
-        Log.d("direction", direction);
-
-        if(direction.equals("left")){
+        if(btScanner.getLeftGesture()) {
             changeHeading(Rotate.LEFT);
+            btScanner.setLeftGesture(false);
         }
-        else if(direction.equals("right")){
+        else if(btScanner.getRightGesture()) {
             changeHeading(Rotate.RIGHT);
+            btScanner.setRightGesture(false);
         }
+
         moveSnake();
 
         if (detectDeath()) {
+            newGame();
+        }
+
+        if (detectDeath()) {
+            SystemClock.sleep(1500); // wait till next game starts
             newGame();
         }
     }
