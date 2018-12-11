@@ -1,5 +1,4 @@
 package teamproject.csed402.postech.com.gesturesnakegame.engines;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +8,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -24,19 +25,21 @@ public class SnakeEngine extends SurfaceView implements Runnable {
     public enum Heading {UP, DOWN, LEFT, RIGHT};
     public enum Rotate {LEFT, RIGHT};
 
-    protected final int NUM_BLOCKS_WIDE = 40;
-    protected final long FPS = 10;
+    protected final int NUM_BLOCKS_WIDE = 30;
+    protected final long FPS = 7;
     protected final long MILLIS_PER_SECOND = 1000;
 
     protected Thread thread;
     protected Context context;
 
     protected int score;
+    protected int bobremoved=0;
+    protected int[][] bobcool= new int[5][2];
 
     protected Heading heading = Heading.RIGHT;
 
     protected int screenX, screenY, snakeLength;
-    protected int bobX, bobY, blockSize;
+    protected int blockSize;
 
     protected int numBlocksHigh;
     protected long nextFrameTime;
@@ -57,13 +60,11 @@ public class SnakeEngine extends SurfaceView implements Runnable {
     public SnakeEngine(Context context, Point size) {
         super(context);
         this.mContext = context;
-
         screenX = size.x;
         screenY = size.y;
 
         blockSize = screenX / NUM_BLOCKS_WIDE;
-        numBlocksHigh = screenY / blockSize;
-
+        numBlocksHigh = (screenY / blockSize)-1;
         AssetManager assetManager = context.getAssets();
 
         surfaceHolder = getHolder();
@@ -105,23 +106,66 @@ public class SnakeEngine extends SurfaceView implements Runnable {
         snakeLength = 1;
         snakeXs[0] = NUM_BLOCKS_WIDE / 2;
         snakeYs[0] = numBlocksHigh / 2;
-
-        spawnBob();
+        //initialize bob && spawn bob
+        for(int i=0; i<5; i++)
+        {
+            for(int j=0; j<2; j++)
+            {
+                bobcool[i][j]=0;
+            }
+        }
+        for(int i=0; i<5; i++)
+        {
+            Random random = new Random();
+            bobcool[i][0] = random.nextInt(NUM_BLOCKS_WIDE - 2) + 1;
+            bobcool[i][1] = random.nextInt(numBlocksHigh - 2) + 1;
+            //to check whether "bob" overlap
+            for(int j=0; j<i; j++) {
+                if(bobcool[i][0]==bobcool[j][0] && bobcool[i][1]==bobcool[j][1]) {
+                    bobcool[i][0]=random.nextInt(NUM_BLOCKS_WIDE - 2) + 1;
+                    bobcool[i][1]=random.nextInt(numBlocksHigh - 2) + 1;
+                }
+            }
+        }
         score = 0;
 
         nextFrameTime = System.currentTimeMillis();
     }
 
     public void spawnBob() {
-        Random random = new Random();
-        bobX = random.nextInt(NUM_BLOCKS_WIDE - 1) + 1;
-        bobY = random.nextInt(numBlocksHigh - 1) + 1;
-    }
+        Random random=new Random();
+        int isreplicate=0;
+        while(true) {
+            int tempX=random.nextInt(NUM_BLOCKS_WIDE - 2) + 1;
+            int tempY=random.nextInt(numBlocksHigh - 2) + 1;
+            isreplicate=0;
+            for(int i=0; i<5; i++)
+            {
+                if(tempX==bobcool[i][0] && tempY==bobcool[i][1]) {
+                    isreplicate=1;
+                }
+            }
+            if(isreplicate==0)
+            {
+                bobcool[bobremoved][0]=tempX;
+                bobcool[bobremoved][1]=tempY;
+                break;
+            }
+        }
 
-    protected void eatBob(){
-        snakeLength++;
-        spawnBob();
-        score++;
+        }
+
+
+    public int eatinfo(){
+        int iseat=0;
+        for(int i=0; i<5; i++) {
+            if(snakeXs[0] == bobcool[i][0] && snakeYs[0] == bobcool[i][1]) {
+                iseat=1;
+                bobremoved=i;
+                break;
+            }
+        }
+        return iseat;
     }
 
     protected void moveSnake() {
@@ -164,13 +208,16 @@ public class SnakeEngine extends SurfaceView implements Runnable {
     }
 
     public void update() {
-        if (snakeXs[0] == bobX && snakeYs[0] == bobY) {
-            eatBob();
+        if (eatinfo()==1) {
+            snakeLength++;
+            spawnBob();
+            score++;
         }
 
         moveSnake();
 
         if (detectDeath()) {
+            SystemClock.sleep(1500); // wait till next game starts
             newGame();
         }
     }
@@ -198,14 +245,13 @@ public class SnakeEngine extends SurfaceView implements Runnable {
                         paint);
             }
 
-            paint.setColor(Color.argb(255, 255, 0, 0));//eating color
-
-            canvas.drawRect(bobX * blockSize,
-                    (bobY * blockSize),
-                    (bobX * blockSize) + blockSize,
-                    (bobY * blockSize) + blockSize,
-                    paint);
-
+            paint.setColor(Color.argb(255, 255, 0, 0));//bob color
+            for(int i=0; i<5; i++)
+            {canvas.drawRect(bobcool[i][0] * blockSize,
+                    (bobcool[i][1] * blockSize),
+                    (bobcool[i][0] * blockSize) + blockSize,
+                    (bobcool[i][1] * blockSize) + blockSize,
+                    paint);}
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
     }

@@ -25,7 +25,6 @@ public class SnakeActivity extends AppCompatActivity {
 
         // Create a new instance of the SnakeEngine class
         snakeEngine = new TouchSnake(this, size);
-
         // Make snakeEngine the view of the Activity
         setContentView(snakeEngine);
     }
