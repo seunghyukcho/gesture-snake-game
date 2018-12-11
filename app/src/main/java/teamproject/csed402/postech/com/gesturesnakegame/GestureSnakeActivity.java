@@ -54,7 +54,7 @@ public class GestureSnakeActivity extends AppCompatActivity {
         // Create a new instance of the SnakeEngine class
 
         //snakeEngine = new TouchSnake(this, size);
-        snakeEngine = new GestureSnake(getApplicationContext(), size, getIntent());
+        snakeEngine = new GestureSnake(getApplicationContext(), size);
 
         // Make snakeEngine the view of the Activity
         setContentView(snakeEngine);
