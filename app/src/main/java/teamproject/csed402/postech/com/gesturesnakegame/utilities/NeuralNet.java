@@ -15,6 +15,19 @@ public class NeuralNet {
     }
 
     int run(double[] in) {
+        if(in.length == 0) return 0;
+
+        if(in.length < 33) {
+            double[] newIn = new double[33];
+
+            for(int i = 0; i < 33 - in.length; i++)
+                newIn[i] = in[0];
+
+            for(int i = 0; i < in.length; i++)
+                newIn[i + 33 - in.length] = in[i];
+
+            in = newIn;
+        }
         double[] tmp;
 
         tmp = layer1.forward(in);
