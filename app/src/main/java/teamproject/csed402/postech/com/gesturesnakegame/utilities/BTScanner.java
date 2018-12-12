@@ -20,7 +20,7 @@ public class BTScanner {
     private ScanSettings settings;
     private List<ScanFilter> filters;
 
-    private int SCAN_PERIOD = 100000; // default, 1 second
+    private int SCAN_PERIOD = 100000000; // default, 1 second
     // requesting scan more than LIMIT_NUMOFSCAN within LIMIT_PERIOD will block scanning
     private final int LIMIT_PERIOD = 30;
     private final int LIMIT_NUMOFSCAN = 10;
@@ -197,14 +197,31 @@ public class BTScanner {
                     double timestamp = (System.currentTimeMillis() - startTime) / 1000.0;
 
                     // timestamp, mac_addr, uuid, major, minor, RSSI
-                    scanResults.add_entry(timestamp, result.getDevice().getAddress(), uuid, major, minor, result.getRssi());
-                    checkGesture();
+                    if(minor == 1) {
+                        scanResults.add_entry(timestamp, result.getDevice().getAddress(), uuid, major, minor, result.getRssi());
+                        Log.d("gesture_value", Double.toString(result.getRssi()));
+                        checkGesture();
+                    }
                 }
             }
         }
 
         public void checkGesture() {
+            NeuralNet model = new NeuralNet();
+            ArrayList<ScanResult> results = returnAllResult();
 
+            double[] input = new double[results.size()];
+            for(int i = 0; i < results.size(); i++)
+                input[i] = results.get(i).RSSI;
+
+            int gesture = model.run(input);
+
+            Log.d("gesture_check", "length: " + Integer.toString(results.size()) + " result: " + Integer.toString(gesture));
+
+            if(gesture == 1)
+                leftGesture = true;
+            else if(gesture == 2)
+                rightGesture = true;
         }
 
         @Override

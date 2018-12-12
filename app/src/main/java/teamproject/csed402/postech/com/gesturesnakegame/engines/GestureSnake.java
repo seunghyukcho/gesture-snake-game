@@ -12,8 +12,6 @@ public class GestureSnake extends SnakeEngine {
     public GestureSnake(Context context, Point size) {
         super(context, size);
         btScanner = new BTScanner(context);
-
-        btScanner.request();
     }
 
     @Override
@@ -43,5 +41,17 @@ public class GestureSnake extends SnakeEngine {
             SystemClock.sleep(1500); // wait till next game starts
             newGame();
         }
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+        btScanner.request();
+    }
+
+    @Override
+    public void pause() {
+        super.pause();
+        btScanner.stopScan();
     }
 }
