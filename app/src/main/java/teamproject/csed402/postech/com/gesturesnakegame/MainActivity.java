@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton touch = (ImageButton) findViewById(R.id.touch_mode);
         ImageButton gest = (ImageButton) findViewById(R.id.gesture_mode);
         ImageButton setting = (ImageButton) findViewById(R.id.setit);
+        ImageButton mute = (ImageButton) findViewById(R.id.muteit);
 
         touch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
                 startActivity(intent);
+            }
+        });
+        mute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mp.stop();
             }
         });
     }
