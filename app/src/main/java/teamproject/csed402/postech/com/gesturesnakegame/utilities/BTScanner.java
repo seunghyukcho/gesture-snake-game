@@ -19,6 +19,7 @@ public class BTScanner {
     private BluetoothLeScanner mLEScanner;
     private ScanSettings settings;
     private List<ScanFilter> filters;
+    private Double lastRotation;
 
     private int SCAN_PERIOD = 100000000; // default, 1 second
     // requesting scan more than LIMIT_NUMOFSCAN within LIMIT_PERIOD will block scanning
@@ -37,6 +38,7 @@ public class BTScanner {
 
     public BTScanner(Context ctx)
     {
+        lastRotation = 0.0;
         mHandler = new Handler();
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -200,14 +202,14 @@ public class BTScanner {
                     if(minor == 1) {
                         scanResults.add_entry(timestamp, result.getDevice().getAddress(), uuid, major, minor, result.getRssi());
                         Log.d("gesture_value", Double.toString(result.getRssi()));
-                        checkGesture();
+                        checkGesture(timestamp);
                     }
                 }
             }
         }
 
-        public void checkGesture() {
-            if(leftGesture || rightGesture) return;
+        public void checkGesture(double t) {
+            if(leftGesture || rightGesture || (t - lastRotation) < 1) return;
 
             NeuralNet model = new NeuralNet();
             ArrayList<ScanResult> results = returnAllResult();
@@ -218,15 +220,11 @@ public class BTScanner {
 
             int gesture = model.run(input);
 
-            Log.d("gesture_check", "length: " + Integer.toString(results.size()) + " result: " + Integer.toString(gesture));
+            Log.d("gesture_check", "time diff: " + Double.toString(t - lastRotation) + " length: " + Integer.toString(results.size()) + " result: " + Integer.toString(gesture));
 
-            if(gesture == 2) {
-                setLeftGesture(true);
-                scanResults = new ScanResultList();
-            }
-            else if(gesture == 1) {
+            if(gesture != 0) {
                 setRightGesture(true);
-                scanResults = new ScanResultList();
+                lastRotation = t;
             }
         }
 

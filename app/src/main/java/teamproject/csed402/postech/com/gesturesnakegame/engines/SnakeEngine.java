@@ -26,7 +26,7 @@ public class SnakeEngine extends SurfaceView implements Runnable {
     public enum Rotate {LEFT, RIGHT};
 
     protected final int NUM_BLOCKS_WIDE = 30;
-    protected final long FPS = 7;
+    protected final long FPS = 3;
     protected final long MILLIS_PER_SECOND = 1000;
 
     protected Thread thread;
@@ -104,23 +104,20 @@ public class SnakeEngine extends SurfaceView implements Runnable {
         snakeXs[0] = NUM_BLOCKS_WIDE / 2;
         snakeYs[0] = numBlocksHigh / 2;
         //initialize bob && spawn bob
-        for(int i=0; i<5; i++)
-        {
-            for(int j=0; j<2; j++)
-            {
-                bobcool[i][j]=0;
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 2; j++) {
+                bobcool[i][j] = 0;
             }
         }
-        for(int i=0; i<5; i++)
-        {
+        for (int i = 0; i < 5; i++) {
             Random random = new Random();
             bobcool[i][0] = random.nextInt(NUM_BLOCKS_WIDE - 2) + 1;
             bobcool[i][1] = random.nextInt(numBlocksHigh - 2) + 1;
             //to check whether "bob" overlap
-            for(int j=0; j<i; j++) {
-                if(bobcool[i][0]==bobcool[j][0] && bobcool[i][1]==bobcool[j][1]) {
-                    bobcool[i][0]=random.nextInt(NUM_BLOCKS_WIDE - 2) + 1;
-                    bobcool[i][1]=random.nextInt(numBlocksHigh - 2) + 1;
+            for (int j = 0; j < i; j++) {
+                if (bobcool[i][0] == bobcool[j][0] && bobcool[i][1] == bobcool[j][1]) {
+                    bobcool[i][0] = random.nextInt(NUM_BLOCKS_WIDE - 2) + 1;
+                    bobcool[i][1] = random.nextInt(numBlocksHigh - 2) + 1;
                 }
             }
         }
@@ -130,27 +127,25 @@ public class SnakeEngine extends SurfaceView implements Runnable {
     }
 
     public void spawnBob() {
-        Random random=new Random();
-        int isreplicate=0;
-        while(true) {
-            int tempX=random.nextInt(NUM_BLOCKS_WIDE - 2) + 1;
-            int tempY=random.nextInt(numBlocksHigh - 2) + 1;
-            isreplicate=0;
-            for(int i=0; i<5; i++)
-            {
-                if(tempX==bobcool[i][0] && tempY==bobcool[i][1]) {
-                    isreplicate=1;
+        Random random = new Random();
+        int isreplicate = 0;
+        while (true) {
+            int tempX = random.nextInt(NUM_BLOCKS_WIDE - 2) + 1;
+            int tempY = random.nextInt(numBlocksHigh - 2) + 1;
+            isreplicate = 0;
+            for (int i = 0; i < 5; i++) {
+                if (tempX == bobcool[i][0] && tempY == bobcool[i][1]) {
+                    isreplicate = 1;
                 }
             }
-            if(isreplicate==0)
-            {
-                bobcool[bobremoved][0]=tempX;
-                bobcool[bobremoved][1]=tempY;
+            if (isreplicate == 0) {
+                bobcool[bobremoved][0] = tempX;
+                bobcool[bobremoved][1] = tempY;
                 break;
             }
         }
 
-        }
+    }
 
 
     public int eatinfo(){
@@ -223,16 +218,16 @@ public class SnakeEngine extends SurfaceView implements Runnable {
         if (surfaceHolder.getSurface().isValid()) {
             canvas = surfaceHolder.lockCanvas();
             SharedPreferences pref = getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
-            int snakecolor=pref.getInt("scolor",0);
-            int alpha=(0xFF000000 & snakecolor)>>24;
-            int red=(0x00FF0000 & snakecolor)>>16;
-            int green=(0x0000FF00 &snakecolor)>>8;
-            int blue=(0x000000FF&snakecolor);
+            int snakecolor = pref.getInt("scolor", 0);
+            int alpha = (0xFF000000 & snakecolor) >> 24;
+            int red = (0x00FF0000 & snakecolor) >> 16;
+            int green = (0x0000FF00 & snakecolor) >> 8;
+            int blue = (0x000000FF & snakecolor);
             canvas.drawColor(Color.argb(255, 0, 0, 0));//background color
-            paint.setColor(Color.argb(alpha,red,green,blue));//snake color
-            fontcolor=new Paint();
+            paint.setColor(Color.argb(alpha, red, green, blue));//snake color
+            fontcolor = new Paint();
             fontcolor.setTextSize(90);
-            fontcolor.setColor(Color.argb(255,255,255,255));//font color which is white
+            fontcolor.setColor(Color.argb(255, 255, 255, 255));//font color which is white
             canvas.drawText("Score:" + score, 10, 70, fontcolor);
             for (int i = 0; i < snakeLength; i++) {
                 canvas.drawRect(snakeXs[i] * blockSize,
@@ -243,19 +238,20 @@ public class SnakeEngine extends SurfaceView implements Runnable {
             }
 
             paint.setColor(Color.argb(255, 255, 0, 0));//bob color
-            for(int i=0; i<5; i++)
-            {canvas.drawRect(bobcool[i][0] * blockSize,
-                    (bobcool[i][1] * blockSize),
-                    (bobcool[i][0] * blockSize) + blockSize,
-                    (bobcool[i][1] * blockSize) + blockSize,
-                    paint);}
+            for (int i = 0; i < 5; i++) {
+                canvas.drawRect(bobcool[i][0] * blockSize,
+                        (bobcool[i][1] * blockSize),
+                        (bobcool[i][0] * blockSize) + blockSize,
+                        (bobcool[i][1] * blockSize) + blockSize,
+                        paint);
+            }
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
     }
 
     public boolean updateRequired() {
-        if(nextFrameTime <= System.currentTimeMillis()){
-            nextFrameTime =System.currentTimeMillis() + MILLIS_PER_SECOND / FPS;
+        if (nextFrameTime <= System.currentTimeMillis()) {
+            nextFrameTime = System.currentTimeMillis() + MILLIS_PER_SECOND / FPS;
             return true;
         }
 
