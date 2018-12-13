@@ -207,6 +207,8 @@ public class BTScanner {
         }
 
         public void checkGesture() {
+            if(leftGesture || rightGesture) return;
+
             NeuralNet model = new NeuralNet();
             ArrayList<ScanResult> results = returnAllResult();
 
@@ -218,10 +220,14 @@ public class BTScanner {
 
             Log.d("gesture_check", "length: " + Integer.toString(results.size()) + " result: " + Integer.toString(gesture));
 
-            if(gesture == 1)
-                leftGesture = true;
-            else if(gesture == 2)
-                rightGesture = true;
+            if(gesture == 2) {
+                setLeftGesture(true);
+                scanResults = new ScanResultList();
+            }
+            else if(gesture == 1) {
+                setRightGesture(true);
+                scanResults = new ScanResultList();
+            }
         }
 
         @Override

@@ -6,7 +6,7 @@ public class ScanResultList extends ArrayList<ScanResult> {
     public void add_entry(double timestamp, String mac_addr, String uuid, int major, int minor, double RSSI) {
         super.add(new ScanResult(timestamp, mac_addr, uuid, major, minor, RSSI));
 
-        if(size() > 33)
+        if(size() > 15)
             remove(0);
     }
 
