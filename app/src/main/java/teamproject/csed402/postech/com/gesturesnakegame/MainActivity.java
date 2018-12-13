@@ -47,11 +47,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         mute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mp.stop();
+                if(!mp.isPlaying())
+                    mp.start();
+                else
+                    mp.stop();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mp.stop();
     }
 }
